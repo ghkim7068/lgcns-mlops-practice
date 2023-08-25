@@ -12,7 +12,10 @@ from sklearn.ensemble import GradientBoostingRegressor
 
 from .constants import ARTIFACT_PATH, LOG_FILEPATH
 
+# StreamHandler
 RICH_FORMAT = "| %(filename)s:%(lineno)s\t| %(message)s"
+
+# FileHandler
 FILE_HANDLER_FORMAT = (
     "[%(asctime)s]\t%(levelname)s\t | %(filename)s:%(lineno)s\t| %(message)s"
 )
@@ -33,10 +36,12 @@ def get_file_handler(
         log_path, when="midnight", interval=1, backupCount=30, encoding="utf-8"
     )
     file_handler.suffix = "logs-%Y%m%d"
-    # TODO: 파일 핸들러의 기본 수준을 INFO로 설정
-    
-    # TODO: 파일 핸들러의 포맷을 FILE_HANDLER_FORMAT으로 설정
-    
+
+    # 파일 핸들러의 기본 수준을 INFO로 설정
+    file_handler.setLevel(logging.INFO)
+
+    # 파일 핸들러의 포맷을 FILE_HANDLER_FORMAT으로 설정
+    file_handler.setFormatter(logging.Formatter)
     return file_handler
 
 
@@ -56,11 +61,13 @@ def set_logger(log_path: str = LOG_FILEPATH) -> logging.Logger:
     )
 
     logger = logging.getLogger("rich")
-    
-    # TODO: 로거의 기본 수준을 DEBUG 설정
-    
-    # TODO: 기본 로거에 위에서 만든 파일 핸들러를 추가
-    
+
+    # 로거의 기본 수준을 DEBUG 설정
+    logger.setLevel(logging.DEBUG)
+
+    # 기본 로거에 위에서 만든 파일 핸들러를 추가
+    logger.addHandler(get_file_handler(log_path))
+
     return logger
 
 
